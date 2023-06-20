@@ -1,0 +1,53 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+
+\title{IFOG with 3x3 drawn with PST optexp}
+\author{gabriellnuness }
+\date{July 2022}
+
+
+\usepackage{pst-optexp}
+
+
+\begin{document}
+
+
+\vspace{1cm}
+% Complete setup
+\begin{center}
+% \begin{pspicture}[showgrid](0.2,0.6)(13,6)
+\begin{pspicture}(0.2,0.6)(13,6)
+%%%% nodes
+\pnodes(2,4){laser}
+(4,2.5){pd1}(5,1){pd2}(6,1){pd3}(3.5,2){pd1_2} % Photodetectors
+(6,5){in1}(6,4){in2}(6,3){in3} % coupler
+(9,3){out1}(9,4){out2}(9,5){out3}
+(12,3){fiber1}(12,5){fiber2} % fibers coil to 3x3
+% Light source
+\optbox[position=start, optboxsize=1.8 1, labeloffset=0](laser)([Xnodesep=0.1]laser){%
+\begin{tabular}{@{}c@{}}Er$^{3+}$\\[-0.2ex]Source\end{tabular}}
+% Circulator
+\newpsstyle{OptCircArrow}{unit=0.6, arrows=<-, arrowinset=0}
+\optcirculator[labeloffset=0.6, optcircangle = -90 180](laser)(in2)(pd1){Circulator}
+% 3x3 Coupler
+\wdmcoupler[labeloffset=-0.57](in1)(in2)(in3)(out2){Coupler}
+\drawfiber(out1){}
+\drawfiber(out3){}
+% MIOC
+\optmzm(out1)(fiber1){Modulator}
+% IFOG coil
+\optfiber[fiberloops=2, fiberloopradius=0.8, addtoFiberOut={ncurv=1, angleB=0}, addtoFiberIn={ncurv=1, angleA=0},
+compshift=-1, label=0.2 . l](fiber1)(fiber2){\begin{tabular}{@{}c@{}}Fiber\\[-0.2ex]Coil\end{tabular}}
+% \drawfiber{(out1)}{(fiber1)}
+\drawfiber{(out3)}{(fiber2)}
+% Photodetector
+\optdetector[labeloffset=0.6,dettype=diode]([Xnodesep=0.1]pd1_2)(pd1_2){PD2}
+\drawfiber[angleA=-90,angleB=0,ncurv=1.1](pd1){}(pd1_2)
+\optdetector[labeloffset=0.6,dettype=diode]([Xnodesep=0.1]in1)(in1){PD1}
+\optdetector[labeloffset=0.6,dettype=diode]([Xnodesep=0.1]in3)(in3){PD3}
+\rput[l](9.1,4){TAP}
+\end{pspicture}
+\end{center}
+
+\end{document}
